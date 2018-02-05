@@ -255,22 +255,32 @@ title('Sheared image');
 RotX4 = @(x) ([cos(x) -sin(x) 0 0; sin(x) cos(x) 0 0; 0 0 1 0; 0 0 0 1]);
 
 Rot4D = RotX4(rand(1));
+Rot4D_inv = inv(Rot4D);
+[U D] = eig(Rot4D);
 
 % --------Shear-------------%
 randShear4D = @() [randShear3D(), [0 0 0]'; [0 0 0 1]];
 Shear4D = randShear4D();
+shear4D_inv = inv(Shear4D);
+[U D] = eig(Shear4D);
 
 % --------Reflection---------%
 % The householder is also a reflection matrix
 Reflection4D = randHouseholder4D();
-det(Reflection4D);
+Reflection4D_inv = inv(Reflection4D);
+[U D] = eig(Reflection4D);
+
 
 % --------Scaling-----------%
 randScaling4D = @() (eye(4) * rand_1_5());
 Scaling4D = randScaling4D();
+Scaling4D_inv = inv(Scaling4D);
+[U D] = eig(Scaling4D);
 
 % --Anisotropic Scaling----%
 AScaling4D = randAScaling4D();
+AScaling4D_inv = inv(AScaling4D);
+[U D] = eig(AScaling4D);
 
 % ---Projection Matrix-----%
 % TODO
@@ -283,6 +293,8 @@ AScaling4D = randAScaling4D();
 % B'B is always symmetric
 B = rand(4);
 Symmetric4D = B' * B;
+Symmetric4D_inv = inv(Symmetric4D);
+[U D] = eig(Symmetric4D);
 
 % -----Permutation Matrix--%
 % we will generate random indices and swap the rows of the identity matrix 
@@ -291,6 +303,8 @@ Symmetric4D = B' * B;
 Perm4D = eye(4);
 idx = randperm(4);
 Perm4D = Perm4D(idx, :);
+Perm4D_inv = inv(Perm4D);
+[U D ] = eig(Perm4D);
 
 % ---Transition Matrix-----%
 Transition4D = eye(4);
@@ -298,7 +312,9 @@ for i=1:4
     Transition4D(i, :) = markovRow(4);
 end
 
-sum(Transition4D, 2);
+sum(Transition4D, 2);  %check rows sum to 1
+Transition4D_inv = inv(Transition4D);
+[U D] = eig(Transition4D); % The only guarantee is that 1 is going to be an eigen value
 
 % ----Laplacian Matrix-----%
 % TODO
@@ -306,16 +322,24 @@ sum(Transition4D, 2);
 % --Upper triangular Matrix--%
 UpperTri4D = rand(4);
 UpperTri4D = triu(UpperTri4D);
+UpperTri4D_inv = inv(UpperTri4D);
+[U D] = eig(UpperTri4D);
 
 % ----Diagonal Matrix------%
 Diag4D = diag(rand(1,4));
+Diag4D_inv = inv(Diag4D);
+[U D] = eig(Diag4D);
 
 % -----Magic Matrix--------%
 Magic4D = magic(4);
+% Magic4D_inv = inv(Magic4D);
+% [U D] = eig(Magic4D); % This one is close to singular. Is this only for a single size?
+                        % No. Only even sizes
+
 
 % ----Housholder Matrix----%
 Householder4D = randHouseholder4D();
-det(Householder4D);
+Housholder4D_inv = inv(Householder4D);
 [U, D] = eig(Householder4D);
 
 %% **********************************************************************
@@ -377,6 +401,8 @@ end
 % You can either try to find something better, or improve the viewer with
 % the built in commands.
 
+% Honestly, it is just fine for simple visualization
+
 path = '../data/mesh/simple_bunny.obj';
 [V, F] = read_obj(path);     
 hold on;
@@ -386,12 +412,36 @@ trimesh(F, V(:, 1), V(:, 2), V(:, 3));
 % Transform the object using some 3D matrices
 % rotation matrix, symmetric matrix, singular matrix
 % display the bunny before and after the transformation in the same figure.
-
+figure('name', 'Before After');
+axis off;
 hold on;
+
+subplot(2,2,1); 
 trimesh(F, V(:, 1), V(:, 2), V(:, 3));
+title('Original');
 axis off;
 
-V_transformed = V * RotX3(pi);
+subplot(2,2,2); 
+V_transformed = V * RotX3(-pi);
 trimesh(F, V_transformed(:,1), V_transformed(:, 2), V_transformed(:, 3));
+title('Rotated');
+axis off;
+
+subplot(2,2,3);
+A = rand(3) * 88;
+symmetric = A' + A;
+V_symmetric = V * symmetric;
+trimesh(F, V_symmetric(:, 1), V_symmetric(:, 2), V_symmetric(:, 3));
+title('Symmetric');
+axis off;
+
+subplot(2,2,4);
+A = RotX3(-pi);
+A(1,:) = A(3,:);
+V_singular = V * A;
+trimesh(F, V_singular(:, 1), V_singular(:, 2), V_singular(:, 3));
+title('Singular');
+axis off;
+
 
 

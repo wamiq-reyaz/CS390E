@@ -9,7 +9,6 @@
 % Reading
 % Read Regression notes in Bishop "Pattern Recognition and Machine Learning" chapter 1.1 (page 4 - page 12)
 
-
 %% **********************************************************************
 % Polynomial fitting
 % Given are a set of n points X in 2D
@@ -17,8 +16,12 @@
 % linear system is solved using polyfit. I would like you to replace the
 % built in polyfit function and manually setup the linear system that
 % computes the correct polynomial coefficients.
+%
+% try this for the point set X and X1
 
 X = [-5 1; -4 2; -3.5 1; -2 -1; -1 5; 0 5; 1 3; 2 3; 4 7; 4.5 8]'
+
+X1 = [-5 1; -3.51 2; -3.5 1; -2 4; -1 5; 0.95 5; 1 3; 2 3; 4 7; 4.5 4]'
 
 figure('name','2D input points');
 Xcoords = X(1, :);
@@ -33,9 +36,5 @@ Ypoly = polyval(p, XcoordsFine);
 
 hold on;
 plot( XcoordsFine, Ypoly );
-
-
-
-% A = zeroes(0,0);
 
 

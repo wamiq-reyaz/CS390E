@@ -138,7 +138,15 @@ Rot3DInv = inv(Rot3D);
 [U, D] = eig(Rot3D);
 
 % ----------Mirroring------------%
-% TODO
+% reflection through the origin
+% randomly generate a rotation about either the x or the y axis
+Mirror2D = randMirror2D();
+Mirror2DInv = inv(Mirror2D);
+[U, D] = eig(Mirror2D);
+
+Mirror3D = randMirror3D();
+Mirror3DInv = inv(Mirror3D);
+[U, D] = eig(Mirror3D);
 
 % -----------Shear---------------%
 % No coordinate shears itself. Mask that out.
@@ -288,6 +296,9 @@ AScaling4D_inv = inv(AScaling4D);
 % There are 3 dangerous pairs. The probability that any one of them is
 % equal is ____.
 
+Projection4D = randProjection();
+[U D ] = eig(Projection4D)
+
 
 % ---Symmetric Matrix------%
 % B'B is always symmetric
@@ -317,7 +328,10 @@ Transition4D_inv = inv(Transition4D);
 [U D] = eig(Transition4D); % The only guarantee is that 1 is going to be an eigen value
 
 % ----Laplacian Matrix-----%
-% TODO
+Laplacian4D = randLaplacian4D();
+Laplacian4Dinv = inv(Laplacian4D);
+% it is a singular matrix
+% [U, D] = eig(Laplacian4D);
 
 % --Upper triangular Matrix--%
 UpperTri4D = rand(4);

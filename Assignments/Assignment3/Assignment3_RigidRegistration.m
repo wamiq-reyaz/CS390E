@@ -16,16 +16,23 @@ angle_max = 30;     % maximum rotation angle
 % ----------------------------------------
 % setup random translation and rotation
 
-translation = tmin + rand(1,3) .* ( tmax - tmin)
+translation = tmin + rand(1,3) .* ( tmax - tmin);
 
 rotation = ones(3, 3); % replace this with something
 
 % ----------------------------------------
 % load mesh
 
-path = '../data/mesh/simple_bunny.obj'; 
+path = '../Data/mesh/simple_bunny.obj'; 
 [V1, F1] = read_obj(path);
 figure('name','bunny');
+trimesh(F1, V1(:,1), V1(:,2), V1(:, 3));
+axis off;
 
+hold on;
 figure('name','2D projected bunny');
-plot(V1(:, 1), V1(:, 3), '.');
+plot(V1(:, 1), V1(:, 2), '.');
+
+% create copy 
+evilBunny = V1;
+

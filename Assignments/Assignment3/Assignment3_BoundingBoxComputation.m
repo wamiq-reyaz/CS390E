@@ -8,7 +8,18 @@
 % before computing the bounding box. Make sure that the result is
 % consistent
 
-path = '../data/mesh/simple_bunny.obj'; 
+path = '../Data/mesh/simple_bunny.obj'; 
 [V, F] = read_obj(path);
+
+% Load data from test file
+testData
+
+DATA = toy;
+[ ur, ll, pc, eigen, center] = BBox(DATA);
+
 figure('name','bunny');
-trimesh(F, V(:, 1), V(:, 2), V(:, 3));
+hold on;
+
+scatter(DATA(:, 1), DATA(:, 2));
+% trimesh(F, V(:, 1), V(:, 2), V(:, 3));
+plotBBox(ur, ll, pc, center);

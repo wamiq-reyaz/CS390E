@@ -7,7 +7,7 @@
 % - create a 2d (projected) visualization and a 3d visualization
 
 % ----------------------------------------
-% parameters
+% parametersrgfdg
 
 tmin = [-1 -1 -1];  % minimum translation offset
 tmax = [1 1 1];     % maximum translation offset
@@ -18,21 +18,67 @@ angle_max = 30;     % maximum rotation angle
 
 translation = tmin + rand(1,3) .* ( tmax - tmin);
 
-rotation = ones(3, 3); % replace this with something
+RotX3 = @(theta) ([cos(theta) -sin(theta) 0 ;
+                   sin(theta) cos(theta) 0; 
+                   0 0 1]);
+               
+rotation = RotX3(rand(1)/2); % This is half a radian limit. Almost 30 deg
 
 % ----------------------------------------
 % load mesh
 
 path = '../Data/mesh/simple_bunny.obj'; 
 [V1, F1] = read_obj(path);
-figure('name','bunny');
-trimesh(F1, V1(:,1), V1(:,2), V1(:, 3));
-axis off;
-
-hold on;
-figure('name','2D projected bunny');
-plot(V1(:, 1), V1(:, 2), '.');
 
 % create copy 
-evilBunny = V1;
+V2 = V1;
+
+% Random translation
+V2 = bsxfun(@plus, V2, translation);
+
+% Random rotation
+V2 = V2 * rotation';
+
+% Perturbation
+V2 = V2 + 1e-4* randn(size(V2));
+
+
+% Prediction
+[predRot, mean1, mean2] = shapeMatching(V1, V2);
+
+% Apply transformations. 
+V2_r = bsxfun(@minus, V2, mean2);
+V2_r = V2_r * predRot';
+V2_r = bsxfun(@plus, V2_r, mean1);
+
+% Plotting
+figure('name', '');
+subplot(221)
+hold on;
+trimesh(F1, V1(:,1), V1(:,2), V1(:, 3));
+trimesh(F1, V2(:,1), V2(:,2), V2(:, 3));
+legend('Original', 'Perturbed');
+view(3)
+
+subplot(222)
+hold on;
+plot(V1(:, 1), V1(:, 2), '.');
+plot(V2(:, 1), V2(:, 2), '.');
+legend('Original', 'Perturbed');
+
+subplot(223)
+hold on;
+trimesh(F1, V1(:,1), V1(:,2), V1(:, 3));
+trimesh(F1, V2_r(:,1), V2_r(:,2), V2_r(:, 3));
+legend('Original', 'Perturbed');
+view(3)
+
+subplot(224)
+hold on;
+plot(V1(:, 1), V1(:, 2), '.');
+plot(V2_r(:, 1), V2_r(:, 2), '.');
+legend('Original', 'Perturbed');
+
+
+
 

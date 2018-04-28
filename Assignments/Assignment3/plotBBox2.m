@@ -10,7 +10,7 @@ function [  ] = plotBBox2( ur, ll, pc, center )
     % Inverse rotation 
     vertices = [ur, ll, lr, ul];
     vertices
-    vertices = pc' * vertices;
+    vertices = pc * vertices;
     
     % Inverse Translation
     for ii=1:4

@@ -4,7 +4,7 @@ function [  ] = plotRectangle( pointMatrix )
     
     [dim, cols] = size(pointMatrix);
     assert(dim == 2 || dim == 3, 'Only 2D/3D points supported');
-    assert(cols == 4, 'The 2D points should be in the column of the matrix as [ur, ll, lr, ul]');
+    assert(cols == 4, 'The points should be in the column of the matrix as [ur, ll, lr, ul]');
     
     
     ur = pointMatrix(:, 1);

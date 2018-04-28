@@ -1,8 +1,6 @@
 function [ rot, meanx, meany ] = shapeMatching( X, Y )
 %SHAPEMATCHING Shape matching using SVD
 %   ROT The calculated optimal rotation from Y to X
-%   TRANSLATE The calculated optimal translation from Y to X
-
     [numx, dimx] = size(X);
     [numy, dimy] = size(Y);
 

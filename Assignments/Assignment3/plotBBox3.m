@@ -17,12 +17,14 @@ function [  ] = plotBBox3( urf, llb, pc, center )
     % Inverse rotation
     % back faces first, front faces later
     vertices = [urb, llb, lrb, ulb, urf, llf, lrf, ulf];
-    vertices = pc' * vertices;
+    vertices = pc * vertices;
     
     % Inverse Translation
     for ii=1:8
         vertices(:, ii) = vertices(:, ii) + center;
     end
+    
+    vertices([2, 8])
     
     % inelegant
     plotRectangle(vertices(:, 1:4));

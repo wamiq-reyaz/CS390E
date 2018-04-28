@@ -14,12 +14,18 @@ path = '../Data/mesh/simple_bunny.obj';
 % Load data from test file
 testData
 
-DATA = toy;
-[ ur, ll, pc, eigen, center] = BBox(DATA);
+%% Plot
+DATA = V;
+[ ur, ll, pc, center] = BBox(DATA);
 
 figure('name','bunny');
-hold on;
-
-scatter(DATA(:, 1), DATA(:, 2));
-% trimesh(F, V(:, 1), V(:, 2), V(:, 3));
+trimesh(F, V(:, 1), V(:, 2), V(:, 3));
 plotBBox(ur, ll, pc, center);
+
+%%
+DATA2D = [V(:, 1), V(:, 2)];
+[ ur, ll, pc, center] = BBox(DATA2D);
+
+figure('name', 'bunny 2D')
+scatter(DATA2D(:, 1), DATA2D(:, 2));
+plotBBox( ur, ll, pc, center)

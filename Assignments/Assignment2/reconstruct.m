@@ -18,6 +18,7 @@ function [img] = reconstruct(image, eigfaces, num_bases)
     
     img = zeros(size(image));
     
+    % should probably call reshape only once at the end
     image = reshape(image, row*col, 1);
     for i=1:num_bases
         contrib_i = ((eigfaces(:, i)' * image) * eigfaces(:, i));

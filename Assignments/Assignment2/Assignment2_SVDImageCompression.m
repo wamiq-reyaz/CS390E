@@ -157,8 +157,8 @@ image_files_list = dir('Results');
 length = length - 2; % -2 for . ..
 num_bases_list = zeros(length, 1);
 
+offset = 2; % index begins from 3, because . .. are the first two elements
 for i=1:size(num_bases_list, 1) 
-    offset = 2; % index begins from 3, because . .. are the first two elements
     name = image_files_list(i + offset).name;
     num = strsplit(name, '_'); num = num{2};
     num = strsplit(num, '.'); num = num{1};

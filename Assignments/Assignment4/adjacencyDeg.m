@@ -1,4 +1,4 @@
-function [ adjacency, degree ] = adjacencyDeg( faces, numVertices )
+function [ adjacency, degree ] = adjacencyDeg( faces)
 %ADJACENCY Returns the adjacency matrix
 %   [adjacency, degree] = ADJACENCYDEG(faces, numVertices) Computes the adjacency matrix from a list of faces.
 %   Also returns the degree of each vertex
@@ -6,25 +6,22 @@ function [ adjacency, degree ] = adjacencyDeg( faces, numVertices )
     [numFaces, dim] = size(faces);
     assert(numFaces > 0);
     assert(dim == 3);
+
+    v1 = faces(:, 1);
+    v2 = faces(:, 2);
+    v3 = faces(:, 3);
     
-    % ideally begin with a sparse matrix to reduce memory footprint
-    adjacency = zeros(numVertices, numVertices);
-    for ii = 1:numFaces
-       % inefficient as hell
-       v1 = faces(ii, 1);
-       v2 = faces(ii, 2);
-       v3 = faces(ii, 3);
-       
-       adjacency(v1, v2) = 1;
-       adjacency(v2, v3) = 1;
-       adjacency(v3, v1) = 1;
-       
-       adjacency(v2, v1) = 1;
-       adjacency(v3, v2) = 1;
-       adjacency(v1, v3) = 1;
-    end
+    % Here is the logic for this. Every edge appears in the  constructor
+    % twice for two triangles it connects. So we divide the value by 2. The
+    % constructor for sparse simply adds duplicates. 0.5*2 = 1 and we are
+    % done
     
-    adjacency = sparse(adjacency);
+    % constructors for sparse
+    ii = [v1 v2,  v1 v3,  v2, v3];
+    jj = [v2 v1,  v3 v1,  v3, v2];
+    vv = ones(numFaces, 6) / 2;
+    
+    adjacency = sparse(ii, jj, vv);
     degree = diag(sum(adjacency, 2));
 end
 

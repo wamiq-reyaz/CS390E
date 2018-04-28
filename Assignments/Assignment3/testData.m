@@ -26,11 +26,11 @@ splitPt = fix(bunnyHeight/3);
 splitBunny(1:splitPt, 1) = splitBunny(1:splitPt, 1) + 0.2* ones(splitPt, 1);
 
 % Gaussian
-mu = [3,4];
-sigma = [1 0.1; 0.1 1];
+mu = [3,4, 100];
+sigma = [10 5 3; 5 10 5; 3 5 10]
 
 rng default  % For reproducibility
-r = mvnrnd(mu,sigma,40);
+r = mvnrnd(mu,sigma,400);
 
 % Hald
 load hald;

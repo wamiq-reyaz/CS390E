@@ -1,4 +1,4 @@
-function [ ur, ll, pc, eigen, center] = BBox( pointCloud )
+function [ ur, ll, pc, center] = BBox( pointCloud )
 %BBOX Returns the Object Oriented Bounding Box in world coordinates
 %   Computes the extent of the Object Oriented Bounding Box using SVD
 
@@ -16,16 +16,19 @@ function [ ur, ll, pc, eigen, center] = BBox( pointCloud )
     %pointCloud = pointCloud - mean(PointCloud);
     
     % find PCA axis 
-    [pc, S, ~] = svd(pointCloud');
-    
-    eigen = zeros(dim, 1);
-    for ii=1:dim
-        eigen(ii) = S(ii, ii);
-    end
+    [pc, ~, ~] = svd(pointCloud');
     
     % project onto principal components
-    projectedPoints = pointCloud * pc;
+    projectedPoints = pointCloud  * pc';
     
+    % This one is more efficient but returns row vectors. The rest of the
+    % code was written with column vecotrs initially. I do not have any
+    % intention of changing that
+%     % determine bounding box dimensions
+%     ur = max(projectedPoints, [], 1);
+%     ll = min(projectedPoints, [], 1);
+%     
+
     % determine bounding box dimensions
     if(dim == 2)
        ur = zeros(2, 1);

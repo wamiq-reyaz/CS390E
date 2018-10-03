@@ -8,22 +8,28 @@
 % before computing the bounding box. Make sure that the result is
 % consistent
 
-path = '../Data/mesh/simple_bunny.obj'; 
+path = '../Data/mesh/teddy.obj'; 
+% path = 'tet.obj';
 [V, F] = read_obj(path);
 
 % Load data from test file
-testData
+% testData
 
 %% Plot
+RotX3 = @(theta) ([cos(theta) -sin(theta) 0 ; sin(theta) cos(theta) 0; 0 0 1]);
+DATA =  (RotX3(rand())* V')' ;
 DATA = V;
+  
+% DATA = (RotX3(rand())* DATA')' ;
 [ ur, ll, pc, center] = BBox(DATA);
 
 figure('name','bunny');
-trimesh(F, V(:, 1), V(:, 2), V(:, 3));
+% trimesh(F, V(:, 1), V(:, 2), V(:, 3));
+scatter3(DATA(:, 1), DATA(:, 2), DATA(:, 3))
 plotBBox(ur, ll, pc, center);
 
 %%
-DATA2D = [V(:, 1), V(:, 2)];
+DATA2D = [DATA(:, 1), DATA(:, 2)];
 [ ur, ll, pc, center] = BBox(DATA2D);
 
 figure('name', 'bunny 2D')

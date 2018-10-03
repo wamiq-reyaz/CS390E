@@ -35,10 +35,10 @@ function [  ] = plotBBox3( urf, llb, pc, center )
     plotRectangle(side1);
     plotRectangle(side2);
     
-    top = [vertices(:, 5), vertices(:, 6), vertices(:, 7), vertices(:, 8)];
-    bottom = [vertices(:, 1), vertices(:, 2), vertices(:, 3), vertices(:, 4)];
-    plotRectangle(top);
-    plotRectangle(bottom);
+%     top = [vertices(:, 5), vertices(:, 6), vertices(:, 7), vertices(:, 8)];
+%     bottom = [vertices(:, 1), vertices(:, 2), vertices(:, 3), vertices(:, 4)];
+%     plotRectangle(top);
+%     plotRectangle(bottom);
 
 end
 

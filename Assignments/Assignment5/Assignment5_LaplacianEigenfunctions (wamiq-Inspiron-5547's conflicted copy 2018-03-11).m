@@ -12,7 +12,7 @@
 % Load a mesh
 
 
-path = 'gargoyle85k.obj'; 
+path = 'boundary.obj'; 
 % path = '../data/mesh/teddy.obj'; 
 [V, F] = read_obj(path);     
 %%
@@ -33,7 +33,7 @@ L = cotMat;
 % Eigenface example for how to write out a sequence of images that is
 % numbered.
 
-numBases = 100;
+numBases = 5;
 [bases, eigVal] = eigs(L, numBases, 'sm');
 %%
 BASE_DIR = './manifoldHarmonics/';

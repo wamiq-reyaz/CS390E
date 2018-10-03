@@ -14,7 +14,7 @@
 
 
 path = 'gargoyle85k.obj'; 
-% path = '../data/mesh/teddy.obj'; 
+% path = '../Data/mesh/teddy.obj'; 
 [V, F] = read_obj(path);     
 %%
 trimesh(F, V(:, 1), V(:, 2), V(:, 3));
@@ -23,7 +23,8 @@ shading interp
 axis off
 %%
 % Compute the cotan matrix and the area weight matrix from assignment 4
-[areaMat, cotMat] = cotArea(F, V);
+[arMat, cotMat] = cotArea(F, V);
+
 %%
 L = cotMat; % we use the symmetric form of the matrix
 % Compute the eigenfunctions of the Laplacian operator and write the first
@@ -33,17 +34,24 @@ L = cotMat; % we use the symmetric form of the matrix
 % Eigenface example for how to write out a sequence of images that is
 % numbered.
 
-numBases = 10000;
-[bases, eigVal] = eigs(L, numBases, 'sm');
+numBases = 1000;
+% [bases, eigVal] = eigs(full(L), numBases, 'sm');
+[bases, eigVal] = laneig(L, numBases, 'SM'); % This is a really fast, parallelized implementation of the 
+                                             % eigenvalue decomposition
 %%
-% BASE_DIR = './manifoldHarmonics/';
-% EXT = '.png';
+% save('1000bases', 'bases');
+%%
+load('1000bases.mat');
+%%
+BASE_DIR = './manifoldNew/';
+EXT = '.png';
 % 
-% for ii=1:numBases
-%     h = prettyPlot(F, V(:, 1), V(:, 2), V(:, 3), bases(:, ii));
-%     saveas(h, [BASE_DIR  num2str(ii) EXT]);
-%     set(h, 'Visible', 'off');
-% end
+for ii=1:numBases
+    figure()
+    h = prettyPlot(F, V(:, 1), V(:, 2), V(:, 3), bases(:, ii)); colorbar;
+    saveas(h, [BASE_DIR  num2str(ii) EXT]);
+    set(h, 'Visible', 'off');
+end
 
 % Compress the mesh by using the Eigenfunctions to iteratively reconstruct
 % the 3D surface. See Figure 4.3 in the geometry processing book. Write the
@@ -51,21 +59,31 @@ numBases = 10000;
 
 %%
 
-BASE_DIR = './fullReconstruction/';
+BASE_DIR = './10krecon/';
 EXT = '.png';
+
+% recon = (V' * bases) * bases;
+% recon = recon';
+% 
+% h = prettyPlot(F, recon(:, 1), recon(:, 2), recon(:, 3)); colormap gray;
+% % saveas(h, [BASE_DIR  num2str(ii) EXT]);
+% set(h, 'Visible', 'off');
+
 
 numVerts = length(V);
 x = zeros(numVerts, 1);
 y = zeros(numVerts, 1);
 z = zeros(numVerts, 1);
-for ii=1:1000
+for ii=1:15
     x = x + bases(:, ii)'*V(:, 1) * bases(:, ii);
     y = y + bases(:, ii)'*V(:, 2) * bases(:, ii);
     z = z + bases(:, ii)'*V(:, 3) * bases(:, ii);
     
-    h = prettyPlot(F, x, y, z); colormap gray;
-    saveas(h, [BASE_DIR  num2str(ii) EXT]);
-    set(h, 'Visible', 'off');
+%     figure('Visible', 'off')
+    figure()
+    h = trimesh(F, x, y, z); colormap gray;
+%     saveas(h, [BASE_DIR  num2str(ii) EXT]);
+%     set(h, 'Visible', 'off');
     
 end
 

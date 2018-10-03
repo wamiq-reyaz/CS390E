@@ -40,7 +40,8 @@ V2 = bsxfun(@plus, V2, translation);
 V2 = V2 * rotation';
 
 % Perturbation
-V2 = V2 + 1e-4* randn(size(V2));
+NOISE = 1e-2;
+V2 = V2 + NOISE * randn(size(V2));
 
 
 % Prediction
@@ -68,15 +69,15 @@ legend('Original', 'Perturbed');
 
 subplot(223)
 hold on;
-trimesh(F1, V1(:,1), V1(:,2), V1(:, 3));
-trimesh(F1, V2_r(:,1), V2_r(:,2), V2_r(:, 3));
+scatter3(V1(:,1), V1(:,2), V1(:, 3), 'x');
+scatter3(V2_r(:,1), V2_r(:,2), V2_r(:, 3), '.');
 legend('Original', 'Perturbed');
 view(3)
 
 subplot(224)
 hold on;
-plot(V1(:, 1), V1(:, 2), '.');
-plot(V2_r(:, 1), V2_r(:, 2), '.');
+plot(V1(:, 1), V1(:, 2), 'x'); alpha 0.5;
+plot(V2_r(:, 1), V2_r(:, 2), '.'); alpha 0.5;
 legend('Original', 'Perturbed');
 
 

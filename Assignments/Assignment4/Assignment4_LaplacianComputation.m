@@ -34,7 +34,7 @@ M_unif = adjMat - degMat;
 L = D_unif * M_unif * V;
 
 % Visualize the uniform Laplacian as a small vector attached to each vertex
-trimesh(F, V(:, 1), V(:, 2), V(:, 3), areaVec); colorbar;
+trimesh(F, V(:, 1), V(:, 2), V(:, 3), areaVec);colorbar;
 hold on;
 vizLaplacian(V, L, 2);
 
@@ -54,8 +54,8 @@ areaVec = full(sum(areaMat, 2)); % used as color for vertices
 L_cot = D*cotMat*V;
 
 % compute deviation with Anna's solution
-error1 = norm(cotMat - M_cot_Anna, 'fro');
-error2 = norm(D - D_cot_Anna, 'fro');
+error1 = norm(cotMat - M_cot_Anna, 'fro')
+error2 = norm(D - D_cot_Anna, 'fro')
 
 csvwrite('annaArea.csv', full(D_cot_Anna));
 csvwrite('wamArea.csv', full(D));

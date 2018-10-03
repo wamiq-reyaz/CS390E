@@ -3,11 +3,9 @@
 
 close all; clear all;
 
-path = 'teddy.obj'; 
-% path = '../data/mesh/teddy.obj'; 
+path = 'cube.obj'; 
+% path = 'teddy.obj'; 
 [V, F] = read_obj(path);     
-trimesh(F, V(:, 1), V(:, 2), V(:, 3));
-
 % compute loop subdivision
 % do this in a separate file as a function
 
@@ -34,10 +32,26 @@ trimesh(F, V(:, 1), V(:, 2), V(:, 3));
 
 % Hint: each edge will be called for splitting twice. Each time you can
 % insert a different opposite vertex into the edgeVertices data structure
-
+% Q: What about boundaries?
 
 % create a rendering of the teddy after one, two, and tree, subdivision
 % steps
 
 % start with a cube or similar "sphere-like" object and also create
 % different renderings after one, two, and three subdivision steps
+trisurf(F, V(:, 1), V(:, 2), V(:, 3), 'FaceColor', 'interp');
+
+lV = V; lF = F;
+for ii= 1:1
+    [lF, lV] = loopSub(lF, lV);
+    figure(); axis equal;
+    trimesh(lF, lV(:, 1), lV(:, 2), lV(:, 3));
+end
+
+
+PATH = ['~/Desktop/' path];
+fid = fopen(PATH, 'w');
+fprintf(fid, 'v %f %f %f\n', lV');
+fprintf(fid, 'f %d %d %d\n', lF');
+fclose(fid);
+

@@ -34,14 +34,14 @@ a4 = A_rand(:, 4);
 %% **********************************************************************
 % copy the top left submatrix of A into the matrix B
 %
-[row, col] = size(A_rand);
-B = zeros(row);
+[row, col] = size(A_rand)
+B = zeros(row)
 
 for i = 1:col
     B(i, 1:col-i+1) = A_rand(i, 1:col-i+1);
 end
 
-
+B
 %% **********************************************************************
 % add another random column to make it a 4 x 5 matrix C
 %
@@ -78,7 +78,8 @@ for i=1:NUM_EXPTS
     times(i) = toc;
 end
 
-fit_curve = fit([1:NUM_EXPTS]', times', 'poly3');
+%%
+fit_curve = fit(1:NUM_EXPTS, times, 'poly3');
 hold on;
 plot(times)
 plot(fit_curve)
@@ -198,11 +199,11 @@ invASclaling3D = inv(AScaling3D);
 
 Scaling2D = randScaling2D();
 Scaling2D(1,1) = 0;  %set the x scale to 0
-det(Scaling2D);
+det(Scaling2D)
 
 AScaling3D = randScaling3D();
 AScaling3D(1,1) = 0;
-det(AScaling3D);
+det(AScaling3D)
 
 %% **********************************************************************
 % Create a simple 2D "Mesh viewer" in matlab

@@ -45,7 +45,12 @@ for i = 1:N
     end
 end
 
-scatter(X(:, 1), X(:,2), N, color);
+red = find(all(bsxfun(@eq, color, [1 0 0]), 2));
+green = find(all(bsxfun(@eq, color, [0 1 0]), 2));
+blue = find(all(bsxfun(@eq, color, [0 0 1]), 2));
+
+scatter(X(:, 1), X(:,2), N, color, 'filled'); alpha(0.50); 
+
 
 %% Compute Kernel PCA
 %% - choose the bandwith parameter 
@@ -54,27 +59,72 @@ scatter(X(:, 1), X(:,2), N, color);
 %% - create your own test data by sampling random points in three squares (similar to the three circles)
 %%   and also save 50+ plots for different bandwidth
 
-bandwidthList = [0.01]; 
+bandwidthList = [0.00001]; 
 
 for ii = 1:length(bandwidthList)
     Bandwidth = bandwidthList(ii);
     
     distMat = rbfMat(X, Bandwidth);
-    bases = kPCA(distMat, 2);
+    bases = kPCA(distMat, 3);
     projPts = distMat * bases;
     
-    figure();title(num2str(Bandwidth));
-    red = find(all(bsxfun(@eq, color, [1 0 0]), 2));
-    green = find(all(bsxfun(@eq, color, [0 1 0]), 2));
-    blue = find(all(bsxfun(@eq, color, [0 0 1]), 2));
+    figure();title(num2str(Bandwidth)); 
+    scatter3(projPts(red, 1), projPts(red,2), projPts(red, 3), N, color(red, :), 'filled'); alpha(0.50); hold on;
+    scatter3(projPts(green, 1), projPts(green,2), projPts(green,3), N, color(green, :), 'filled'); alpha(0.50); hold on;
+    scatter3(projPts(blue, 1), projPts(blue,2),  projPts(blue,3), N, color(blue, :), 'filled'); alpha(0.50); 
+    grid minor;
     
-    scatter(projPts(red, 1), projPts(red,2), N, color(red, :), 'filled'); alpha(0.50); hold on;
-    scatter(projPts(green, 1), projPts(green,2), N, color(green, :), 'filled'); alpha(0.50); hold on;
-    scatter(projPts(blue, 1), projPts(blue,2), N, color(blue, :), 'filled'); alpha(0.50); hold on;
+%     scatter(projPts(red, 1), projPts(red,2), N, color(red, :), 'filled'); alpha(0.50); hold on;
+%     scatter(projPts(green, 1), projPts(green,2), N, color(green, :), 'filled'); alpha(0.50); hold on;
+%     scatter(projPts(blue, 1), projPts(blue,2), N, color(blue, :), 'filled'); alpha(0.50); hold on;
     
     filename = ['fig/ProjectedPoints_' num2str(Bandwidth) '.png'];
     saveas(gcf, filename)
     
 end
 
+%% Square data
+rng(42); % for reproducibility
 
+U = sampleSquare([0,0], 15, 20);
+V = sampleSquare([0,0], 30, 20);
+W = sampleSquare([0,0], 45, 20);
+data = [U; V; W];
+
+[N, ~] = size(data);
+color = zeros(N,3);
+for i = 1:N
+    if( norm(data(i,:),Inf) < 16)
+        color(i, :) = [1 0 0];
+    elseif( norm(data(i,:), Inf) < 32) 
+        color(i, :) = [0 1 0];
+    else
+        color(i, :) = [0 0 1];
+    end
+end
+
+red = find(all(bsxfun(@eq, color, [1 0 0]), 2));
+green = find(all(bsxfun(@eq, color, [0 1 0]), 2));
+blue = find(all(bsxfun(@eq, color, [0 0 1]), 2));
+figure();
+scatter(data(:, 1), data(:, 2), N,  color, 'filled'); alpha 0.5;
+%%
+
+bandwidthList = [0.00088]; 
+
+for ii = 1:length(bandwidthList)
+    Bandwidth = bandwidthList(ii);
+    
+    distMat = rbfMat(data, Bandwidth);
+    bases = kPCA(distMat, 3);
+    projPts = distMat * bases;
+    
+    figure();title(num2str(Bandwidth));    
+    scatter3(projPts(red, 1), projPts(red,2), projPts(red, 3), N, color(red, :), 'filled'); alpha(0.50); hold on;
+    scatter3(projPts(green, 1), projPts(green,2), projPts(green,3), N, color(green, :), 'filled'); alpha(0.50); hold on;
+    scatter3(projPts(blue, 1), projPts(blue,2),  projPts(blue,3), N, color(blue, :), 'filled'); alpha(0.50); hold on;
+    grid minor;
+    filename = ['fig/ProjectedPoints_' num2str(Bandwidth) '.png'];
+    saveas(gcf, filename)
+    
+end

@@ -14,12 +14,13 @@ function [ ur, ll, pc, center] = BBox( pointCloud )
         pointCloud(:, ii) = pointCloud(:, ii) - center(ii);
     end    
     %pointCloud = pointCloud - mean(PointCloud);
+    cov = pointCloud' * pointCloud;
     
     % find PCA axis 
-    [pc, ~, ~] = svd(pointCloud');
+    [pc s v] = eigs(cov);
     
     % project onto principal components
-    projectedPoints = pointCloud  * pc';
+    projectedPoints = (pc'* pointCloud')';
     
     % This one is more efficient but returns row vectors. The rest of the
     % code was written with column vecotrs initially. I do not have any

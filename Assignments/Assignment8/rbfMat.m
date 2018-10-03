@@ -4,13 +4,13 @@ function [ mat ] = rbfMat( data, param )
     [nSamples, dim] = size(data);
     
     assert(nSamples > 0, 'empty dataset');
-    assert(dim > 0, 'dim miust be greater than 0');
+    assert(dim > 0, 'dim must be greater than 0');
     
     % center input
     data = data - mean(data);
     
     mat = zeros(nSamples);
-    % first find norm the diffetence
+    % first find norm of the difference
     for ii=1:nSamples
        mat(ii, :) = veclen(data - data(ii, :) , 2);
     end

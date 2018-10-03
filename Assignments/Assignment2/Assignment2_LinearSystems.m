@@ -50,8 +50,8 @@ raw_features = X(:, 1);
 targets = X(:, 2);
 features = zeros(num_samples, num_samples);
 
+% create polynomial features
 for col=1:num_samples 
-    % create polynomial features
     features(:, col) = raw_features .^ (col - 1);
 end
 
@@ -59,7 +59,7 @@ poly_coeff = pinv(features) * targets;
 poly_coeff = flipud(poly_coeff); % polyval expects coeffs in decreasing powers
 
 prediction = polyval(poly_coeff, XcoordsFine);
-plot(x_coords_fine, prediction);
+plot(XcoordsFine, prediction);
 legend('Input points', 'polyfit result', 'regression result');
 l2_diff = norm(prediction - Ypoly);
 title(['L2 difference: ', num2str(l2_diff, 3)]);
